@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pinyougou.mapper.GoodsMapper" >
+        <select id="findGoodsByWhere" resultType="map">
+            SELECT id,goods_name AS goodsName,price,
+            audit_status AS auditStatus,category1_id AS category1Id,
+            category2_id AS category2Id,category3_id AS category3Id
+            FROM tb_goods
+            <where>
+                <if test="goods !=null">
+                    <if test="goods.sellerId !=null and goods.sellerId !=''">
+                        seller_id=#{goods.sellerId}
+                    </if>
+                    <if test="goods.goodsName !=null and goods.goodsName !=''">
+                        AND goods_name like concat('%',#{goods.goodsName},'%')
+                    </if>
+                    <if test="goods.auditStatus !=null and goods.auditStatus != ''">
+                        AND  audit_status=#{goods.auditStatus}
+                    </if>
+                </if>
+            </where>
+            ORDER  by id ASC
+        </select>
+    <select id="findAllPageByWhere" resultType="map">
+        SELECT id,goods_name AS goodsName,price,category1_id AS category1Id,
+        category2_id AS category2Id,category3_id AS category3Id,
+        audit_status AS auditStatus FROM tb_goods where is_delete IS NULL
+        <if test="goods !=null">
+            <if test="goods.sellerId !=null and goods.sellerId!=''">
+                AND seller_id=#{goods.sellerId}
+            </if>
+            <if test="goods.goodsName !=null and goods.goodsName !=''">
+                AND goods_name like concat('%',#{goodsName},'%')
+            </if>
+            <if test="goods.auditStatus !=null and goods.auditStatus !=''">
+                AND audit_status =#{goods.auditStatus}
+            </if>
+        </if>
+        ORDER BY id ASC
+    </select>
+
+    <update id="updateAuditStatus">
+        update tb_goods set audit_status =#{status} where id IN 
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+    <update id="updateDeleteStatus">
+        UPDATE tb_goods set is_delete =#{isDelete} where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>
