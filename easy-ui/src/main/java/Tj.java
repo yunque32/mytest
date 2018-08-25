@@ -5,5 +5,6 @@ public class Tj {
         String a="abcdefg";
         String s = a.substring(2, 3);
         System.out.println(s);
+        System.out.println("mi");
     };
 }
