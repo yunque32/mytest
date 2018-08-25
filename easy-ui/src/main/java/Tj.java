@@ -6,5 +6,6 @@ public class Tj {
         String s = a.substring(2, 3);
         System.out.println(s);
         System.out.println("mi");
+        System.out.println("hai");
     };
 }
