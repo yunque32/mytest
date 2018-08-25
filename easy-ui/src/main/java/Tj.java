@@ -8,5 +8,6 @@ public class Tj {
         System.out.println("mi");
         System.out.println("hai");
         System.out.println("d");
+        System.out.println("e");
     };
 }
