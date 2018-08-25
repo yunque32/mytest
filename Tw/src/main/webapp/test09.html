@@ -1,0 +1,26 @@
+<!DOCTYPE html >
+<html lang="en">
+<meta charset="UTF-8">
+<script src="js/angular.min.js"></script>
+<script type="text/javascript">
+    // 定义模块
+    var myApp = angular.module('app', []);
+    // 在模块中添加控制器
+    myApp.controller('myController', function($scope){
+
+        // 定义下拉列表框需要的数据变量
+        $scope.cities = [{id:1, name:'广州市'},
+            {id:2, name:'深圳市'},
+            {id:3, name:'珠海市'},
+            {id:4, name:'东莞市'}];
+    });
+</script>
+</head>
+<body ng-app="app" ng-controller="myController">
+
+<select ng-model="city" ng-options="c.id as c.name for c in cities">
+    <option value="">==请选择==</option>
+</select>
+{{city}}
+</body>
+</html>

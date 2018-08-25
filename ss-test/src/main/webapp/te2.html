@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="shortcut icon" type="image/x-icon" href="itcast.ico"/>
+    <link rel="stylesheet" type="text/css" href="base.css"/>
+    <script src="js/angular.min.js"></script>
+    <script type="text/javascript">
+            var myApp = angular.module('app',[] );
+            myApp.controller('TeController1',function ($scope,$http) {
+                $scope.sendget=function () {
+                     $http.get("/data.json").then(function (value) {
+                        $scope.users=value.data;
+                     },function (reason) {
+                         alert("请求失败")
+                     })
+                };
+            });
+    </script>
+
+</head>
+    <body ng-app="app" ng-controller="TeController1" ng-init="sendget();">
+
+    </body>
+</html>

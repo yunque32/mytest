@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!--################ 配置请求URL拦截规则 ###############-->
+    <!-- 配置哪些URL不需要拦截 -->
+    <security:http pattern="/login.html" security="none"/>
+    <security:http pattern="/login_error.html" security="none"/>
+    <!-- 配置哪些URL需要拦截 use-expressions: 不用SpEL表达式 -->
+    <security:http use-expressions="false" entry-point-ref="">
+        <!-- 配置哪些请求URL需要拦截，用什么角色或权限访问 -->
+        <security:intercept-url pattern="/**" access="ROLE_USER"/>
+        <security:csrf disabled="true"/>
+       <security:custom-filter ref="casAuthenticationFilter"
+                               position="CAS_FILTER"/>
+        <security:custom-filter ref="singleLogoutFilter"
+                                before="CAS_FILTER"/>
+        <security:custom-filter ref="logoutFilter"
+                                before="LOGOUT_FILTER"/>
+
+    </security:http>
+    <bean id="casAuthenticationEntryPoint"
+          class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+        <!-- 配置CAS登录请求地址 (需要修改) -->
+        <property name="loginUrl" value="http://sso.pinyougou.com/login"/>
+        <!-- 配置服务属性 -->
+        <property name="serviceProperties" ref="serviceProperties"/>
+    </bean>
+
+    <!-- 配置CAS认证过滤器 -->
+    <bean id="casAuthenticationFilter"
+          class="org.springframework.security.cas.web.CasAuthenticationFilter">
+        <!-- 认证管理器 -->
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <!-- 配置登录的请求地址，不指定时默认将会是“/login/cas” -->
+        <property name="filterProcessesUrl" value="/login/cas"/>
+    </bean>
+
+    <!-- 配置CAS单点退出过滤器 -->
+    <bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"/>
+
+    <!-- 配置spring-security退出过滤器 -->
+    <bean id="logoutFilter"
+          class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <!-- 配置退出成功请求地址 (需要修改)-->
+        <constructor-arg value="http://sso.pinyougou.com/logout?service=http://localhost:9003/success.html"/>
+        <!-- 配置退出处理器 -->
+        <constructor-arg>
+            <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+        </constructor-arg>
+        <!-- 配置退出的请求地址 默认为“/logout”-->
+        <property name="filterProcessesUrl" value="/logout"/>
+    </bean>
+
+
+    <!--################# 配置认证管理器 ################-->
+    <security:authentication-manager id="authenticationManager">
+        <!-- 配置CAS作为认证的提供者 -->
+        <security:authentication-provider
+                ref="casAuthenticationProvider"/>
+    </security:authentication-manager>
+
+    <!-- 配置CAS认证提供者 -->
+    <bean id="casAuthenticationProvider"
+          class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+        <!-- 配置认证服务 -->
+        <property name="authenticationUserDetailsService">
+            <!-- 配置用户名包裹服务 -->
+            <bean class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+                <!-- 配置自定义服务类 (需要修改) -->
+                <constructor-arg ref="userDetailsService"/>
+            </bean>
+        </property>
+        <!-- 配置服务属性 -->
+        <property name="serviceProperties" ref="serviceProperties"/>
+        <!-- 配置票据验证器 -->
+        <property name="ticketValidator">
+            <!-- 配置票据验证 -->
+            <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+                <!-- 配置CAS服务地址前缀 (需要修改) -->
+                <constructor-arg value="http://sso.pinyougou.com"/>
+            </bean>
+        </property>
+        <!-- 配置该客户端的key(可以随意写值) -->
+        <property name="key" value="auth_provider_key"/>
+    </bean>
+
+
+    <!-- 配置自定义认证服务类 -->
+    <bean id="userDetailsService" class="cn.itcast.casclient.service.UserDetailServiceImpl"/>
+
+    <!-- 配置服务属性 -->
+    <bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
+        <!-- 配置登录成功后重定向的服务地址 默认/login/cas
+            (需跟CAS认证过滤器中的filterProcessesUrl一致) 需要修改 -->
+        <property name="service" value="http://localhost:9003/login/cas"/>
+    </bean>
+
+</beans>

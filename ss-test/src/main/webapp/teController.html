@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="shortcut icon" type="image/x-icon" href="itcast.ico"/>
+    <link rel="stylesheet" type="text/css" href="base.css"/>
+    <script src="js/angular.min.js"></script>
+    <script type="text/javascript">
+            var myApp = angular.module('app',[] );
+            // myApp.controller('TeController1',function ($scope,$http) {
+            //     $scope.send=function () {
+            //         $http({
+            //             method:'get',
+            //             url:'/find',
+            //             params:{id:200}
+            //         }).then(function (value) {
+            //             alert("成功了");
+            //         },function (reason) {
+            //             alert("东风不知雪")
+            //          });
+            //     };
+            // });
+
+            myApp.controller('myController',function ($scope,$http) {
+                        $scope.sendget =function () {
+                            $http.get("/data.json").then(function (response) {
+                                $scope.users=response.data;
+                            },function (response) {
+                                alert("请求失败!");
+                            });
+                        };
+            });
+    </script>
+
+</head>
+    <body ng-app="app" ng-controller="TeController1" ng-init="sendget();">
+        <table border="1">
+            <tr>
+                <th>编号</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>年龄</th>
+            </tr>
+            <tr ng-repeat="u in users">
+                <th>{{$index+1}}</th>
+                <th>{{u.name}}</th>
+                <th>{{u.sex}}</th>
+                <th>{{u.age}}</th>
+            </tr>
+        </table>
+    </body>
+</html>
