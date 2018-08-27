@@ -1,4 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
     <title>Title</title>
@@ -9,8 +10,8 @@
     <meta http-equiv="description" content="This is my page">
     <link rel="stylesheet" type="text/css" href="themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="themes/icon.css">
-    <script type="text/javascript" src="../../jquery.min.js"></script>
-    <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easyui.min.js"></script>
 </head>
 <body>
 <div id="win1" class="easyui-window" title="My Window" style="width:600px;height:400px"
