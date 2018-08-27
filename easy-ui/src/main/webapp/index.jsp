@@ -17,7 +17,6 @@
 </head>
 <body>
 
-<br/>
 <div
         id="win1"
         class="easyui-window"
