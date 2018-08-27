@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="js/angular.min.js"></script>
+    <script type="text/javascript"></script>
 
 </head>
 <!-- 指定AngularJS应用的根元素 -->
-<body ng-app="app" ng-controller="myController">
+<body ng-app="app" ng-controller="myController" >
     <div style="display: none;" id="man">
-        月健身花费:<input type="text"/><br/>
-
+        月健身花费:{{35.79.toFixed(1)}}<input type="text"/><br/>
     </div>
-    mimi
+    mimi{{35.79.toFixed(1)}}
 </body>
 </html>
